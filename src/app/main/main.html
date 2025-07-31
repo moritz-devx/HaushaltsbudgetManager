@@ -1,0 +1,376 @@
+<div class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-content">
+      <div class="navbar-logo navbar-links">
+        <a href="#" class="nav-link">💰 BudgetManager</a>
+      </div>
+
+      <div class="navbar-links">
+        <a href="#" class="nav-link">Dashboard</a>
+        <a href="#" class="nav-link">Reports</a>
+        <a href="#" class="nav-link">Categories</a>
+        <a href="#" class="nav-link">Settings</a>
+      </div>
+
+      <div class="navbar-actions">
+        <button (click)="openEntryWindow()" class="btn btn-primary">
+          + New Entry
+        </button>
+        <button class="btn-icon">
+          <svg
+            width="24"
+            height="24"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            ></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="container">
+    <!-- Budget Summary Cards -->
+    <div class="summary-cards">
+      <div class="card income-card">
+        <div class="card-content">
+          <div class="card-icon income-icon">↑</div>
+          <div class="card-info">
+            <div class="card-label">Total Income</div>
+            <div class="card-value">
+              €{{ getTotalIncome() | number : "1.2-2" }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card expense-card">
+        <div class="card-content">
+          <div class="card-icon expense-icon">↓</div>
+          <div class="card-info">
+            <div class="card-label">Total Expenses</div>
+            <div class="card-value">
+              €{{ getTotalExpenses() | number : "1.2-2" }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card balance-card">
+        <div class="card-content">
+          <div class="card-icon balance-icon">=</div>
+          <div class="card-info">
+            <div class="card-label">Balance</div>
+            <div
+              class="card-value"
+              [class]="
+                getBalance() >= 0 ? 'positive-balance' : 'negative-balance'
+              "
+            >
+              €{{ getBalance() | number : "1.2-2" }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Entries List -->
+    <div class="entries-section">
+      <div class="section-header">
+        <h3>Recent Entries</h3>
+        <p>A list of all your income and expense entries.</p>
+      </div>
+      <div class="entries-list">
+        <div *ngFor="let entry of entries" class="entry-item">
+          <div class="entry-content">
+            <div
+              class="entry-icon"
+              [class]="
+                entry.type === 'income' ? 'income-badge' : 'expense-badge'
+              "
+            >
+              {{ entry.type === "income" ? "+" : "-" }}
+            </div>
+            <div class="entry-details">
+              <div class="entry-description">
+                {{ entry.description }}
+                <button (click)="deleteEntry(entry.id)">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    height="15"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                    />
+                  </svg>
+                </button>
+                <button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    height="15"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div class="entry-meta">
+                <span class="entry-date">{{
+                  entry.date | date : "short"
+                }}</span>
+                <span class="entry-interval">{{
+                  getIntervalLabel(entry.interval)
+                }}</span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="entry-amount"
+            [class]="
+              entry.type === 'income' ? 'income-amount' : 'expense-amount'
+            "
+          >
+            {{ entry.type === "income" ? "+" : "-" }}€{{
+              entry.amount | number : "1.2-2"
+            }}
+          </div>
+        </div>
+        <div *ngIf="entries.length === 0" class="empty-state">
+          No entries yet. Click "New Entry" to add your first transaction.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Entry Window -->
+<div
+  *ngIf="showEntryWindow"
+  class="entry-window-backdrop"
+  (click)="closeEntryWindow()"
+>
+  <div class="entry-window" (click)="$event.stopPropagation()">
+    <div class="entry-window-header">
+      <h3>Add New Entry</h3>
+      <button (click)="closeEntryWindow()" class="entry-window-close">
+        <svg
+          width="24"
+          height="24"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <form (ngSubmit)="addEntry()" [formGroup]="entryForm" class="entry-form">
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input
+          type="text"
+          id="description"
+          name="description"
+          required
+          class="form-input"
+          placeholder="Enter description"
+          formControlName="description"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="amount">Amount (€)</label>
+        <input
+          type="number"
+          id="amount"
+          name="amount"
+          min="0"
+          step="0.01"
+          class="form-input"
+          placeholder="0.00"
+          formControlName="amount"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Type</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input
+              type="radio"
+              name="type"
+              value="income"
+              class="radio-input"
+              formControlName="type"
+            />
+            <span class="radio-text">Income</span>
+          </label>
+          <label class="radio-label">
+            <input
+              type="radio"
+              name="type"
+              value="expense"
+              class="radio-input"
+              formControlName="type"
+            />
+            <span class="radio-text">Expense</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Interval</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input
+              type="radio"
+              name="interval"
+              value="one-time"
+              formControlName="interval"
+              class="radio-input"
+            />
+            <span class="radio-text">One-time</span>
+          </label>
+          <label class="radio-label">
+            <input
+              type="radio"
+              name="interval"
+              value="weekly"
+              formControlName="interval"
+              class="radio-input"
+            />
+            <span class="radio-text">Weekly</span>
+          </label>
+          <label class="radio-label">
+            <input
+              type="radio"
+              name="interval"
+              value="monthly"
+              formControlName="interval"
+              class="radio-input"
+            />
+            <span class="radio-text">Monthly</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="entry-window-actions">
+        <button
+          type="button"
+          (click)="closeEntryWindow()"
+          class="btn btn-secondary"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="!entryForm.valid"
+          [ngClass]="{
+            btn: true,
+            'btn-primary': true,
+            'btn-primary-disabled':
+              !entryForm.valid
+          }"
+        >
+          Add Entry
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div *ngIf="showMonthlyBudgetWindow" class="monthly-budget-window-backdrop">
+  <div class="monthly-budget-window">
+    <div class="monthly-budget-window-header">
+      <h3>Add Monthly Budget</h3>
+      <button class="monthly-budget-window-close cursor-disabled" disabled>
+        <svg
+          width="24"
+          height="24"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <form
+      (ngSubmit)="addMonthlyBudgetEntry()"
+      [formGroup]="monthlyBudgetForm"
+      class="monthly-budget-form"
+    >
+      <div class="form-group">
+        <label for="amount">Amount (€)</label>
+        <input
+          type="number"
+          name="amount"
+          id="amount"
+          min="0"
+          step="0.01"
+          class="form-input"
+          placeholder="0.00"
+          formControlName="amount"
+        />
+      </div>
+      <div class="monthly-budget-window-actions">
+        <button type="button" disabled class="btn btn-primary-disabled">
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="!monthlyBudgetForm.valid"
+          [ngClass]="{
+            btn: true,
+            'btn-primary': true,
+            'btn-primary-disabled': !monthlyBudgetForm.valid
+          }"
+        >
+          Confirm
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
